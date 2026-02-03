@@ -1,11 +1,19 @@
-name: spider-gazelle
-version: 2.0.0
+name: matter-provider
+version: 1.0.0
 
 dependencies:
   # The server framework
   action-controller:
     github: spider-gazelle/action-controller
     version: ~> 7.0
+
+  # matter protocol
+  matter:
+    github: Crystal-Matter/matter
+
+  # generates JSON schema from a JSON::Serializable class definition.
+  json-schema:
+    github: spider-gazelle/json-schema
 
 development_dependencies:
   ameba:
@@ -15,5 +23,5 @@ development_dependencies:
 
 # compile target
 targets:
-  app:
+  matter-provider:
     main: src/app.cr

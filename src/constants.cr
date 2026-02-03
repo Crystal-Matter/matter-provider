@@ -1,7 +1,7 @@
 require "action-controller/logger"
 
 module App
-  NAME = "Spider-Gazelle"
+  NAME = "matter-provider"
   {% begin %}
     VERSION = {{ `shards version "#{__DIR__}"`.chomp.stringify.downcase }}
   {% end %}
@@ -18,8 +18,14 @@ module App
 
   STATIC_FILE_PATH = ENV["PUBLIC_WWW_PATH"]? || "./www"
 
-  COOKIE_SESSION_KEY    = ENV["COOKIE_SESSION_KEY"]? || "_spider_gazelle_"
+  COOKIE_SESSION_KEY    = ENV["COOKIE_SESSION_KEY"]? || "_matter_provider_"
   COOKIE_SESSION_SECRET = ENV["COOKIE_SESSION_SECRET"]? || "4f74c0b358d5bab4000dd3c75465dc2c"
+
+  # Provider-specific defaults
+  DEFAULT_DATA_PATH = ENV["MATTER_DATA_PATH"]? || "."
+
+  # Start time for uptime calculation
+  class_property start_time : Time = Time.utc
 
   def self.running_in_production?
     IS_PRODUCTION
@@ -28,18 +34,7 @@ module App
   # flag to indicate if we're outputting trace logs
   class_getter? trace : Bool = false
 
-  # Registers callbacks for USR1 signal
-  #
-  # **`USR1`**
-  # toggles `:trace` for _all_ `Log` instances
-  # `namespaces`'s `Log`s to `:info` if `production` is `true`,
-  # otherwise it is set to `:debug`.
-  # `Log`'s not registered under `namespaces` are toggled to `default`
-  #
-  # ## Usage
-  # - `$ kill -USR1 ${the_application_pid}`
   def self.register_severity_switch_signals : Nil
-    # Allow signals to change the log level at run-time
     {% unless flag?(:win32) %}
       Signal::USR1.trap do |signal|
         @@trace = !@@trace
@@ -47,10 +42,7 @@ module App
         puts " > Log level changed to #{level}"
         ::Log.builder.bind "#{NAME}.*", level, LOG_BACKEND
 
-        # Ignore standard behaviour of the signal
         signal.ignore
-
-        # we need to re-register our interest in the signal
         register_severity_switch_signals
       end
     {% end %}
