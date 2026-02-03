@@ -19,11 +19,11 @@ module App
     getter registry : DeviceRegistry
     @storage_file : String
 
-    def initialize(data_path : String)
+    def initialize(data_path : String, matter_port : Int32 = 0)
       @storage_file = File.join(data_path, "matter_bridge_storage.json")
       @registry = DeviceRegistry.new(data_path)
 
-      super(ip_addresses: local_ips)
+      super(ip_addresses: local_ips, port: matter_port)
 
       # Wire up registry callbacks
       @registry.on_device_added do |device|

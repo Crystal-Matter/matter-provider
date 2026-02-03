@@ -22,7 +22,8 @@ module App
   COOKIE_SESSION_SECRET = ENV["COOKIE_SESSION_SECRET"]? || "4f74c0b358d5bab4000dd3c75465dc2c"
 
   # Provider-specific defaults
-  DEFAULT_DATA_PATH = ENV["MATTER_DATA_PATH"]? || "."
+  DEFAULT_DATA_PATH   = ENV["MATTER_DATA_PATH"]? || "."
+  DEFAULT_MATTER_PORT = (ENV["MATTER_PORT"]? || 0).to_i
 
   # Start time for uptime calculation
   class_property start_time : Time = Time.utc

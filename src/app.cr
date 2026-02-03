@@ -8,6 +8,7 @@ module App
   host = DEFAULT_HOST
   process_count = DEFAULT_PROCESS_COUNT
   data_path = DEFAULT_DATA_PATH
+  matter_port = DEFAULT_MATTER_PORT
   bearer_token : String? = nil
   docs = nil
   docs_file = nil
@@ -29,6 +30,10 @@ module App
 
     parser.on("--data=PATH", "Base directory for provider storage") do |path|
       data_path = path
+    end
+
+    parser.on("--matter-port=PORT", "Matter protocol port (default: ephemeral)") do |mport|
+      matter_port = mport.to_i
     end
 
     parser.on("--bearer=TOKEN", "Enable bearer token authentication") do |token|
@@ -89,6 +94,7 @@ module App
   puts "Launching #{NAME} v#{VERSION}"
   puts "Data path: #{data_path}"
   puts "HTTP API: #{host}:#{port}"
+  puts "Matter port: #{matter_port}"
   puts "Bearer auth: #{bearer_token ? "enabled" : "disabled"}"
 end
 
@@ -107,7 +113,7 @@ module App
   Dir.mkdir_p(data_path) unless Dir.exists?(data_path)
 
   # Initialize and start the Matter provider
-  provider = Provider.new(data_path)
+  provider = Provider.new(data_path, matter_port)
   provider.start
 
   # Start HTTP server

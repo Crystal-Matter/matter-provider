@@ -13,10 +13,14 @@ module App
     getter data_path : String
     @started_at : Time
 
-    def initialize(@data_path : String)
-      @bridge = BridgeDevice.new(@data_path)
+    def initialize(@data_path : String, matter_port : Int32 = 0)
+      @bridge = BridgeDevice.new(@data_path, matter_port)
       @started_at = Time.utc
       @@instance = self
+    end
+
+    def matter_port : Int32
+      @bridge.port
     end
 
     def self.current : Provider

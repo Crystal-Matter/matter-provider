@@ -54,7 +54,7 @@ shards:
 
   matter:
     git: https://github.com/crystal-matter/matter.git
-    version: 0.1.0+git.commit.099f3549f7c565d10b0e5968dda32146b2ed4229
+    version: 0.1.0+git.commit.0804dbfcc2476a29c266a3ee8632e3d530858cfb
 
   openssl_ext:
     git: https://github.com/spider-gazelle/openssl_ext.git
